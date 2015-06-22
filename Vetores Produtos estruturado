@@ -1,0 +1,138 @@
+import java.util.Scanner;
+
+
+public class VetoresProdutos {
+	static int indVetores=0;
+	
+	static int vCodProduto[] = new int[6];
+	static int vQtProduto[] = new int[6];
+	static String vDescProduto[] = new String[6];
+	static double vValorProduto[]=new double[6];
+	static int optionMenu;
+	static double ValorTotalCompra;
+	static  String desCompra;
+	static int qtVenda, indCompra ;
+	
+	
+	public static void main(String[] args) {
+		while (true) {
+			menu();
+			optionMenu=(Integer.parseInt(recebeDigitacao("Escolha:")));
+			
+			if (optionMenu == 1) {
+				option1();				
+			} else if (optionMenu == 2){
+				option2();
+			} else if (optionMenu == 3){
+				option3();
+			} else if(optionMenu == 0){
+				System.out.println("FIM  do PROGRAMA");
+				System.exit(0);
+			}else{
+				System.out.println("Digite uma opção válida");
+			}
+			
+		}
+
+	}
+	private static void option3() {
+		msg("Escolha o Produto:");
+		listarProdutos();
+		int codVenda = (Integer.parseInt(recebeDigitacao("Qual Código do Produto:")));
+		qtVenda = (Integer.parseInt(recebeDigitacao("Quantos:")));
+		if(localizaProduto(codVenda,qtVenda)){
+			if(confirmaCompra(codVenda,qtVenda))retiraProdutosVendidos();
+			}
+	
+		
+	}
+	
+	private static void retiraProdutosVendidos() {
+		
+		vQtProduto[indCompra]= vQtProduto[indCompra] - qtVenda  ;
+		   if(vQtProduto[indCompra]==0){
+			realocaVetores();
+		}
+		
+	}
+	private static void realocaVetores() {
+		listarProdutos();
+		msg("---");
+		for (int i = indCompra; i < indVetores-1; i++) {
+			vCodProduto[i]=vCodProduto[i+1];
+			vQtProduto[i]=vQtProduto[i+1];
+			vDescProduto[i]=vDescProduto[i+1];
+			vValorProduto[i]=vValorProduto[i+1];
+		}
+		indVetores--;
+		listarProdutos();
+		
+	}
+ 	private static boolean confirmaCompra(int codVenda, int qtVenda) {
+		msg("Você escolheu:"+qtVenda+" "+desCompra+" Total:"+ValorTotalCompra);
+		if(recebeDigitacao("Confirma a Compra: S ou N: ").toLowerCase().charAt(0)=='s')return true;
+		return false;
+	}
+	private static boolean localizaProduto(int codVenda, int qtVenda) {
+		
+		for (int i = 0; i < indVetores; i++) {
+			if(codVenda==vCodProduto[i]&&qtVenda<=vQtProduto[i]){
+				ValorTotalCompra = vValorProduto[i]*qtVenda;
+				desCompra = vDescProduto[i].toUpperCase();
+				indCompra = i;
+				return true;
+			}
+		}
+		msg("Quantidade ou Código iválido ");
+		return false;
+	}
+	private static void option2() {
+		if(!(indVetores==0)){
+			msg("-----Lista de Produtos-----");
+			listarProdutos();
+		}else{
+			msg("Vc n cadastrou Produtos");
+		}
+			
+		
+	}
+	private static void listarProdutos() {
+		for (int i = 0; i < indVetores; i++) {
+			System.out.println("Código:["+vCodProduto[i]+"] Descrição:["+vDescProduto[i]+
+					"] Quantidade:["+vQtProduto[i]+"] Valor:[R$"+vValorProduto[i]+"]");
+		}
+		
+	}
+	private static void option1() {
+		msg("-----Cadastro de Produtos:-----");
+		int cod = (Integer.parseInt(recebeDigitacao("Código do Produto:")));
+		String desc = recebeDigitacao("Descrição do Produto:");
+		int qt = (Integer.parseInt(recebeDigitacao("Quantidade:")));
+		double valor = Double.parseDouble(recebeDigitacao("Valor:"));
+		enviaValoresVetores( cod,  qt,  desc, valor);
+		
+	}
+	private static void enviaValoresVetores(int cod, int qt, String desc,double valor) {
+		vQtProduto[indVetores] =qt;
+		vCodProduto[indVetores]= cod;
+		vDescProduto[indVetores]=desc;
+		vValorProduto[indVetores]=valor;
+		indVetores++;
+	}
+	public static String recebeDigitacao(String mensagem){
+		Scanner e = new Scanner(System.in);
+		System.out.print(mensagem);
+		return e.nextLine();
+	}
+	public static void menu(){
+		System.out.println("\n---  MENU ");
+		System.out.println("---  1-Cadastrar Produtos");
+		System.out.println("---  2- Listar Produtos");
+		System.out.println("---  3-Vender");
+		System.out.println("---  0 -Encerrar");
+	}
+	public static void msg(String msg){
+		System.out.println(msg);
+	}
+
+}
