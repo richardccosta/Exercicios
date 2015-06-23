@@ -1,0 +1,181 @@
+import java.util.Scanner;
+
+
+public class prefeitura {
+	static int indVetores=0;	
+	static String vNome[] = new String[20];
+		static double vSalario[]  = new double[20];
+		static char vSexo[] = new char[20];
+		static int vIdade[]  = new int[20];
+		static int optionMenu ;
+		static String nome;
+		static int idade;
+		static char sexo;
+		static double salario;
+		static double mediaPopulacao,mediaSexoM,mediaSexoF,media1m,media2m,media3m,media1f,media2f,media3f;
+		static int contM = 0, contF = 0,cont1M = 0,cont2M = 0,cont3M = 0, cont1F = 0,cont2F = 0,cont3F = 0;
+		static double totalcont1M =0 ,totalcont2M = 0,totalcont3M=0,totalcont1F=0,totalcont2F=0,totalcont3F=0;
+		static  double totalM = 0, totalF = 0;
+	public static void main(String[] args) {
+		
+		while (true) {
+			if(indVetores==20)break;
+			menu();
+			optionMenu=(Integer.parseInt(recebeDigitacao("Escolha:")));
+			
+			if (optionMenu == 1) {
+				cadastrar();		
+			} else if (optionMenu == 2){
+				mediaSalarioPopulacao();
+				mediaPorSexo();
+				calculaMedias();
+				mostraMedias();
+				
+				
+			}else if(optionMenu == 0){
+				msg("FIM  do PROGRAMA");
+				System.exit(0);
+			}else{
+				msg("Digite uma opção válida");
+			}
+			
+		}
+		
+		
+		
+
+	}
+	private static void mostraMedias() {
+		System.out.println("Media população: "+mediaPopulacao);
+		System.out.println("Media total de salarios dos homens: "+mediaSexoM);
+		System.out.println("Media total de salarios das meninas: "+mediaSexoF);
+		System.out.println("Porcentagem de homens com salario entre [0,00 e 499,99] é:"+media1m+"%");
+		System.out.println("Porcentagem de homens com salario entre [500,00 e 1.399,99]  Homens "+media2m+"%");
+		System.out.println("Porcentagem de homens com salario entre[1.400,00 e acima]   Homens "+media3m+"%");
+		System.out.println("Porcentagem de mulheres com salario entre [0,00 e 499,99]      Mulheres "+media1f+"%");
+		System.out.println("Porcentagem de mulheres com salario entre  [500,00 e 1.399,99]  Mulheres  "+media2f+"%");
+		System.out.println("Porcentagem de mulheres com salario entre  [1.400,00 e acima]   Mulheres  "+media3f+"%");
+		
+		
+	}
+	private static void mediaPorSexo() {
+	
+		for (int i = 0; i <indVetores; i++) {
+			if(vSexo[i]=='M'||vSexo[i]=='m'){
+				verificaFaixasM(vSalario[i]);
+				totalM+=vSalario[i];
+				contM++;}
+			if(vSexo[i]=='F'||vSexo[i]=='f'){
+				verificaFaixasF(vSalario[i]);
+				totalF+=vSalario[i];
+				contF++;
+			}
+		}
+		
+				
+		
+	}
+	
+	private static void calculaMedias() {
+		mediaSexoM = totalM /contM;
+		mediaSexoF = totalF/ contF;
+		
+		media1m = cont1M*100.0/contM;
+		media2m = cont2M*100.0/contM;
+		media3m = cont3M*100.0/contM;
+		media1f = cont1F*100.0/contF;
+		media2f = cont2F*100.0/contF;
+		media3f = cont3F*100.0/contF;
+		
+	}
+	private static void verificaFaixasM(double d) {
+		if(d >= 0.00 && d<=499.99 ){
+			totalcont1M+=d;
+			cont1M++;
+		}
+		if(d >= 500.00 && d<=1399.99 ){
+			totalcont2M+=d;
+			cont2M++;
+		}
+		if(d >= 1400.00){
+			totalcont3M+=d;
+			cont3M++;
+		}
+		
+	}
+	private static void verificaFaixasF(double d) {
+		if(d >= 0.00 && d<=499.99 ){
+			totalcont1F+=d;
+			cont1F++;
+		}
+		if(d >= 500.00 && d<=1399.99 ){
+			totalcont2F+=d;
+			cont2F++;
+		}
+		if(d >= 1400.00){
+			totalcont3F+=d;
+			cont3F++;
+		}
+	
+	
+		
+	}
+	private static void mediaSalarioPopulacao() {
+		double total = 0;
+		for (int i = 0; i < indVetores; i++) {
+			total+=vSalario[i];
+		}
+		System.out.println(total+"/"+(indVetores));
+		mediaPopulacao = total/(indVetores);
+		System.out.println(mediaPopulacao);
+	}
+	private static void cadastrar() {
+		msg("-----Cadastro :-----");
+		while(true){
+			nome = recebeDigitacao("Digite o nome:");
+			idade = (Integer.parseInt(recebeDigitacao("idade:")));
+			if(idade<=0||idade>=130 ){
+				msg("Idade errada");
+				break;
+			}
+			sexo = recebeDigitacao("Sexo: M ou F: ").charAt(0);
+			if(sexo!='m'&& sexo!='M'&& sexo!='f'&& sexo!='F'){
+				msg("Sexo invalido");
+				break;
+			}
+			salario = Double.parseDouble(recebeDigitacao("Salario:"));
+			enviaValoresVet(nome,idade,sexo,salario);
+			break;
+		}
+		
+		
+		
+	}
+	
+	private static void enviaValoresVet(String nome2, int idade2,
+			char sexo2, double salario2) {
+		
+		 vNome[indVetores]     = nome2;
+		 vSalario[indVetores]  = salario2;
+		 vSexo[indVetores]     = sexo2;
+		 vIdade[indVetores]    = idade2;
+		 indVetores++;
+		
+	}
+	public static String recebeDigitacao(String mensagem){
+		Scanner e = new Scanner(System.in);
+		System.out.print(mensagem);
+		return e.nextLine();
+	}
+	public static void menu(){
+		System.out.println("\n---  MENU ");
+		System.out.println("---  1-Cadastrar ");
+		System.out.println("---  2- Relatorio");
+		
+		System.out.println("---  0 -Encerrar");
+	}
+	public static void msg(String msg){
+		System.out.println(msg);
+	}
+
+}
